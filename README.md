@@ -1,13 +1,3 @@
-cd "path_to_the_project"
+Soft for hackquest.io
 
-python -m venv venv
-
-cd venv/scripts
-
-activate
-
-cd ../..
-
-pip install -r requirements.txt
-
-python main.py
+TG - https://t.me/code_and_coin
