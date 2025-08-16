@@ -16,6 +16,7 @@ import string
 from .config import GATHER_REF, USE_REF, FEED_PET_MAX_LVL, SLEEP_FROM_TO
 from .paths import REFERRALS, UNUSED_REFERRALS
 from eth_abi import encode as abi_encode
+from datetime import timezone, timedelta, datetime
 
 
 class Task(Logger, ModernTask):
@@ -64,7 +65,12 @@ class Task(Logger, ModernTask):
             nonce = nonce_response['nonce']
             msg_to_sign = nonce_response['message']
             try:
-                login_response = (await self.login_request(nonce, msg_to_sign)).json()['data']['loginByWallet']
+                login_response = (await self.login_request(nonce, msg_to_sign)).json()
+                if ' 402 Payment Required' in str(login_response):
+                    self.logger.error("Server error. Trying again in 60-90 min...")
+                    await sleep(3600, 4400)
+                    continue
+                login_response = login_response['data']['loginByWallet']
             except TypeError:
                 self.logger.error("Need to send login request again...")
                 await sleep(5, 10)
@@ -470,6 +476,14 @@ class Task(Logger, ModernTask):
         await sleep(3, 5)
         await self.register_hackathon_step_3(random_data)
         self.logger.success("Successfully registered in hackathon!")
+
+    @staticmethod
+    def seconds_until_next_day(min_delay, max_delay):
+        now = datetime.now(timezone.utc)
+        next_day = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+        seconds_left = (next_day - now).total_seconds()
+        random_delay = random.randint(min_delay, max_delay)
+        return int(seconds_left + random_delay)
 
     async def infinity_run_daily(self):
         while True:
