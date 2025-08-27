@@ -1,0 +1,1 @@
+from .models import HackQuestsBaseModel as base_project_model

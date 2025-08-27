@@ -1,0 +1,43 @@
+PROJECT_SETTINGS:
+  RETRIES: 3 # Number of retries to reconnect with 1 proxy
+
+SOLVERS:
+  CLOUDFLARE:
+    LOCAL:
+      MAX_WORKERS: 10
+
+OKX:
+  WITHDRAW_TO_OKX:
+    AMOUNT_TYPE: "a" # p (percentage) / a (amount)
+    AMOUNT: [ 100, 100]
+    CURRENCY: "eth" # "eth" or "0x..."
+    CHAIN: "Ethereum" # "Ethereum" / "Arbitrum" / "Avalanche" / "Optimism" / "Polygon" / "Base" / ANY L2
+    RPC: "default"
+    WITHDRAW_ALL_TO_ONE: False
+    WITHDRAW_TO: "0x..." # if WITHDRAW_ALL_TO_ONE = True
+
+  ACCOUNTS:
+    ACCOUNT1:
+      ACCOUNT:
+        API_KEY: ""
+        SECRET_KEY: ""
+        PASSPHRASE: ""
+      SUB_TO_MAIN:
+        SUB_LIST: ["all"] # ["all"] / ["sub1", "sub2", "sub3", ...]
+        AMOUNT_TYPE: "p" # p (percentage) / a (amount)
+        AMOUNT: [ 100, 100 ]
+        CURRENCY: "ETH"
+        SEND_ALL_IF_BALANCE_LESS_AMOUNT: True # if you want to transfer more than you have on subaccount balance -> send all
+      MAIN_TO_SUB:
+        SUB_LIST: ["all"] # ["all"] / ["sub1", "sub2", "sub3", ...]
+        AMOUNT_TYPE: "p" # p (percentage) / a (amount)
+        AMOUNT: [ 100, 100 ]
+        CURRENCY: "USDT"
+      WITHDRAW_TO_WALLETS:
+        AMOUNT_TYPE: "a" # p (percentage) / a (amount)
+        AMOUNT: [ 0.004, 0.0045 ]
+        CURRENCY: "ETH" # any supported
+        CHAIN: "BASE" # any supported
+        MAX_WITHDRAW_FEE: "any" # 0.1, 1, ...
+        WAIT_FOR_DEPOSIT: True # wait until tokens are deposited (works only for evm)
+        CURRENCY_CONTRACT_ADDRESS_TO_CHECK: "" # need if WAIT_FOR_DEPOSIT = True and CURRENCY != "ETH"
