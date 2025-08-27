@@ -534,14 +534,14 @@ class Task(Logger, ModernTask):
                         await sleep(10, 15)
                     completed = True
             elif task['name'] == 'Daily Course Complete':
-                # if not task['progress'] or not task['progress']['completed']:
-                self.logger.info(f"Need to complete task `{task['name']}` today")
-                phases_task = Phases(self.session,
-                                     self.client,
-                                     self.db_manager,
-                                     self.logger)
-                await phases_task.complete_unit()
-                completed = True
+                if not task['progress'] or not task['progress']['completed']:
+                    self.logger.info(f"Need to complete task `{task['name']}` today")
+                    phases_task = Phases(self.session,
+                                         self.client,
+                                         self.db_manager,
+                                         self.logger)
+                    await phases_task.complete_unit()
+                    completed = True
         if completed:
             self.logger.info("Sleeping 2-3 minutes before claiming tasks...")
             await sleep(120, 180)
