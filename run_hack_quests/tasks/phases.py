@@ -103,8 +103,9 @@ class Phases:
                             if not phase['rewardClaimRecord'] and not phase['certificate']:
                                 if not phase_claimed:
                                     self.logger.info("Going to claim phase rewards...")
-                                    claim_phase_reward_response = \
-                                    (await self.claim_phase_rewards(phase['id'])).json()['data']['claimPhaseReward']
+                                    claim_phase_reward_response = (await self.claim_phase_rewards(phase['id'])).json()['data']['claimPhaseReward']
+                                    if not claim_phase_reward_response:
+                                        continue
                                     self.logger.success(f"Claimed phase rewards: {claim_phase_reward_response.get('coin')}")
                                     phase_claimed = True
                             elif phase['certificate'] and not phase['certificate'].get('userCertification'):
@@ -121,7 +122,11 @@ class Phases:
                                 self.logger.info(f"Quiz {page['title']} already completed!")
                                 continue
                             self.logger.info(f"Starting completing quiz {page['title']}...")
-                            quiz_indexes = (await self.find_unique_page(page['id'])).json()['data']['findUniquePage']['content'].get("right", [])
+                            quiz_indexes = (await self.find_unique_page(page['id'])).json()['data']['findUniquePage']['content']
+                            if type(quiz_indexes) is list:
+                                quiz_indexes = quiz_indexes
+                            else:
+                                quiz_indexes = quiz_indexes.get("right", [])
                             right = quiz_indexes[0]['children']
                             if right:
                                 for index in range(len(right)):
